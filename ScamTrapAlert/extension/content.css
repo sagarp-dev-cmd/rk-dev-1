@@ -1,0 +1,80 @@
+/* content.css - Styles for ScamRadar content script highlights */
+
+/* Highlight style for dangerous sentences with red glow */
+.scamradar-highlight {
+  position: relative;
+  display: inline;
+  background: rgba(255, 71, 87, 0.15);
+  box-shadow: 0 0 8px rgba(255, 71, 87, 0.4);
+  border-radius: 3px;
+  padding: 2px 0;
+  cursor: help;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid #FF4757;
+}
+
+.scamradar-highlight:hover {
+  background: rgba(255, 71, 87, 0.25);
+  box-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+}
+
+.scamradar-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  width: 250px;
+  background-color: #1a1a1a;
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  z-index: 1000000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  border: 1px solid #FF4757;
+  pointer-events: none;
+}
+
+.scamradar-highlight:hover .scamradar-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-5px);
+}
+
+.scamradar-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #FF4757 transparent transparent transparent;
+}
+
+
+.scamradar-warning-badge {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  background-color: #FF4757;
+  color: #FFFFFF;
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 100000;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  animation: scamradar-pulse 2s ease-in-out infinite;
+}
+
+@keyframes scamradar-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}

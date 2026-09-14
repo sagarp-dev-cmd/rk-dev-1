@@ -1,0 +1,11 @@
+
+{
+    "manifest_version": 3,
+    "name": "ScamTrapAlert ",
+    "version": "1.0",
+    "description": "A Chrome extension to detect and report scams.",
+    "actions": {
+        "default_popup": "index.html"
+        
+    }
+}

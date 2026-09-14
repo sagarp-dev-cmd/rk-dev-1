@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "ScamTrapAlert",
+  "version": "1.0.13",
+  "description": "AI-powered Chrome extension that detects scams, phishing, and manipulation in real-time",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "scripting",
+    "notifications"
+  ],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://REPLACE-WITH-YOUR-RENDER-URL.onrender.com/*",
+    "https://web.whatsapp.com/*",
+    "https://www.linkedin.com/*",
+    "https://mail.google.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ScamTrapAlert",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  }
+}

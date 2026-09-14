@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScamTrapAlert</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="18" stroke="url(#g)" stroke-width="2" opacity="0.35"/>
+            <path d="M20 6 L20 14 M20 26 L20 34 M6 20 L14 20 M26 20 L34 20" stroke="url(#g)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="20" cy="20" r="5" fill="url(#g)"/>
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="40" y2="40">
+                <stop stop-color="#22D3EE"/>
+                <stop offset="1" stop-color="#06B6D4"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">ScamTrapAlert</h1>
+          <p class="brand-tagline">AI-powered scam &amp; manipulation detection</p>
+        </div>
+      </div>
+    </header> 
+
+    <div id="usageBar" class="usage-bar">
+      <span id="usageText" class="usage-bar__text">Loading scan quota…</span>
+    </div>
+
+    <nav class="tabs" role="tablist" aria-label="Screens">
+      <button type="button" class="tab-btn active" data-tab="scan" role="tab" aria-selected="true">Home</button>
+      <button type="button" class="tab-btn" data-tab="history" role="tab" aria-selected="false">History</button>
+      <button type="button" class="tab-btn" data-tab="settings" role="tab" aria-selected="false">Settings</button>
+    </nav>
+
+    <div class="app-body">
+    <div id="scan-tab" class="tab-content active">
+      <div id="scanMainSection" class="scan-section">
+        <!-- <p class="scan-hint"><strong>Scan current tab</strong> analyzes the Chrome tab you have open. <strong>Home · History · Settings</strong> above only switch screens—they do not start a scan.</p> -->
+        <button type="button" id="scanButton" class="scan-button">
+          <span class="scan-button__icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </span>
+          <span class="scan-button__label">Scan current tab</span>
+        </button>
+        <div id="loading" class="loading" hidden>
+          <span class="loading__dots" aria-hidden="true"></span>
+          <span class="loading__text">Analyzing content…</span>
+        </div>
+      </div>
+
+      <button type="button" id="homeProBanner" class="pro-banner" data-open-upgrade aria-label="Go Pro — unlock all categories and sentence highlights">
+        <span class="pro-banner__icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 10l4-6 4 3 4-3 4 6-2 10H6L4 10z"/>
+          </svg>
+        </span>
+        <span class="pro-banner__copy">
+          <span class="pro-banner__line">Unlock all 8 categories</span>
+          <span class="pro-banner__line">+ sentence highlights</span>
+        </span>
+        <span class="pro-banner__cta">Go Pro</span>
+      </button>
+
+      <section id="homeUpgradePanel" class="upgrade-panel upgrade-panel--home" hidden aria-labelledby="homeUpgradeTitle">
+        <header class="upgrade-panel__head">
+          <span class="upgrade-panel__icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 10l4-6 4 3 4-3 4 6-2 10H6L4 10z"/>
+            </svg>
+          </span>
+          <div class="upgrade-panel__titles">
+            <h2 id="homeUpgradeTitle" class="upgrade-panel__title">Upgrade to Prime</h2>
+            <p class="upgrade-panel__sub">Cancel anytime</p>
+          </div>
+        </header>
+        <p class="upgrade-panel__pitch">Unlimited scans — less than a coffee per month</p>
+        <div class="upgrade-plans" role="listbox" aria-label="Choose a plan">
+          <button type="button" class="upgrade-plan upgrade-plan--selected" data-plan="monthly" data-price="4.99" role="option" aria-selected="true">
+            <span class="upgrade-plan__popular">Popular</span>
+            <span class="upgrade-plan__name">Monthly</span>
+            <p class="upgrade-plan__price"><span class="upgrade-plan__amount">$4.99</span><span class="upgrade-plan__period">/mo</span></p>
+          </button>
+          <button type="button" class="upgrade-plan" data-plan="yearly" data-price="37" role="option" aria-selected="false">
+            <span class="upgrade-plan__name">Yearly</span>
+            <p class="upgrade-plan__price"><span class="upgrade-plan__amount">$37</span><span class="upgrade-plan__period">/yr</span></p>
+            <span class="upgrade-plan__save">Save 37%</span>
+          </button>
+        </div>
+        <ul class="upgrade-features-compact" aria-label="Prime benefits">
+          <li>Unlimited scans · 8 signal categories</li>
+          <li>Highlights on page · Gmail, LinkedIn, WhatsApp</li>
+          <li>Full scan history</li>
+        </ul>
+        <button type="button" class="upgrade-pay-btn" data-upgrade-pay>Pay $4.99 →</button>
+        <p class="upgrade-panel__payments">Secure checkout · Cards accepted</p>
+      </section>
+
+      <div id="results" class="results" hidden>
+        <div id="verdictBanner" class="verdict-banner" hidden aria-live="polite">
+          <p class="verdict-banner__eyebrow">Scan result</p>
+          <div class="verdict-banner__row">
+            <span id="verdictRiskBadge" class="verdict-banner__badge" data-level="SAFE">SAFE</span>
+            <h2 id="verdictScamType" class="verdict-banner__type">No threat detected</h2>
+          </div>
+          <p id="verdictOneLiner" class="verdict-banner__line"></p>
+          <div class="verdict-banner__stats">
+            <span id="verdictScore">Score 0</span>
+            <span class="verdict-banner__sep" aria-hidden="true">·</span>
+            <span id="verdictSource" class="verdict-banner__source"></span>
+          </div>
+        </div>
+
+        <div id="scanSourceBox" class="scan-source-box scan-source-box--compact" role="status" hidden>
+          <span class="scan-source-kicker">Source</span>
+          <p id="scanSourceHeading" class="scan-source-heading"></p>
+          <p id="scanSourceTitle" class="scan-source-title" hidden></p>
+          <p id="scanSourceMeta" class="scan-source-meta" hidden></p>
+          <p id="scanSourceStatus" class="scan-source-status" hidden></p>
+        </div>
+
+        <div class="card card--hero card--hero-compact card--risk-visual">
+          <h2 id="scamTypeLabel" class="scam-type-label scam-type-label--secondary" data-level="SAFE" hidden>Scan to detect scam type</h2>
+          <div class="risk-score-header">
+            <div class="score-display">
+              <span id="scoreValue" class="score-value">0</span>
+              <span class="score-label">Risk score</span>
+            </div>
+            <div id="riskBadge" class="risk-badge" data-level="SAFE">SAFE</div>
+          </div>
+          <section class="risk-chart-section" aria-labelledby="riskChartTitle">
+            <h3 id="riskChartTitle" class="risk-chart-section__title">What drove this score?</h3>
+            <p id="riskChartSubtitle" class="risk-chart-section__subtitle">Each slice is a manipulation signal we detected</p>
+            <div class="risk-chart-layout">
+              <div class="chart-box" id="scoreChartWrap" aria-label="Risk breakdown chart">
+                <canvas id="scoreChart" width="128" height="128"></canvas>
+                <span id="chartCenterScore" class="chart-center-score" aria-hidden="true">—</span>
+              </div>
+              <ul id="chartLegend" class="chart-legend" role="list" aria-label="Risk signal breakdown"></ul>
+            </div>
+          </section>
+        </div>
+
+        <details class="results-details" id="resultsDetails">
+          <summary class="results-details__summary">Show manipulation signals</summary>
+        <section class="card card--categories" aria-labelledby="cat-heading">
+          <h3 id="cat-heading" class="card__title">Manipulation signals</h3>
+          <div class="category-grid">
+            <div class="category-item">
+              <span class="category-label">Fear manipulation</span>
+              <span id="fearLevel" class="category-level" data-level="LOW">LOW</span>
+            </div>
+            <div class="category-item">
+              <span class="category-label">Urgency tactics</span>
+              <span id="urgencyLevel" class="category-level" data-level="LOW">LOW</span>
+            </div>
+            <div class="category-item">
+              <span class="category-label">Authority abuse</span>
+              <span id="authorityLevel" class="category-level" data-level="LOW">LOW</span>
+            </div>
+            <div class="category-item">
+              <span class="category-label">Trust engineering</span>
+              <span id="trustLevel" class="category-level" data-level="LOW">LOW</span>
+            </div>
+            <div class="category-item">
+              <span class="category-label">Fake scarcity</span>
+              <span id="scarcityLevel" class="category-level" data-level="LOW">LOW</span>
+            </div>
+            <div class="category-item">
+              <span class="category-label">Phishing signals</span>
+              <span id="phishingLevel" class="category-level" data-level="LOW">LOW</span>
+            </div>
+            <div class="category-item">
+              <span class="category-label">Fake recruiter</span>
+              <span id="recruiterLevel" class="category-level" data-level="LOW">LOW</span>
+            </div>
+            <div class="category-item">
+              <span class="category-label">AI-generated tone</span>
+              <span id="aiLevel" class="category-level" data-level="LOW">LOW</span>
+            </div>
+          </div>
+        </section>
+        </details>
+
+        <section class="card card--prose">
+          <h3 class="card__title">Analysis summary</h3>
+          <p id="summaryText" class="prose">No analysis performed yet.</p>
+        </section>
+
+        <section class="card card--prose card--accent">
+          <h3 class="card__title">Recommendation</h3>
+          <p id="recommendationText" class="prose">Run a scan to analyze visible text on this page.</p>
+        </section>
+      </div>
+    </div>
+
+    <div id="history-tab" class="tab-content">
+      <section class="card card--flush">
+        <h3 class="card__title">Recent scans</h3>
+        <p class="card__subtitle">Last 10 analyses on this device</p>
+        <div id="historyList" class="history-list">
+          <p class="no-history">No scan history yet.</p>
+        </div>
+        <button type="button" id="clearHistory" class="clear-btn">Clear history</button>
+      </section>
+    </div>
+
+    <div id="settings-tab" class="tab-content">
+      <section class="card card--flush">
+        <h3 class="card__title">Preferences</h3>
+        <p class="card__subtitle">These apply to new scans</p>
+
+        <div class="setting-block">
+          <div class="setting-row">
+            <div class="setting-copy">
+              <span class="setting-name">Auto-scan on load</span>
+              <span class="setting-desc">Analyze the page after it finishes loading</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="autoScan" class="toggle__input">
+              <span class="toggle__track" aria-hidden="true"></span>
+            </label>
+          </div>
+
+          <div class="setting-field">
+            <label class="field-label" for="sensitivity">Detection sensitivity</label>
+            <select id="sensitivity" class="field-select">
+              <option value="low">Low — fewer false positives</option>
+              <option value="medium" selected>Medium — balanced</option>
+              <option value="high">High — maximum vigilance</option>
+            </select>
+          </div>
+
+          <div class="callout callout--muted">
+            <p>Higher sensitivity may flag more legitimate messages; use Low on trusted sites.</p>
+          </div>
+
+          <button type="button" id="settingsProBanner" class="pro-banner" data-open-upgrade aria-label="Go Pro — unlock all categories and sentence highlights">
+            <span class="pro-banner__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 10l4-6 4 3 4-3 4 6-2 10H6L4 10z"/>
+              </svg>
+            </span>
+            <span class="pro-banner__copy">
+              <span class="pro-banner__line">Unlock all 8 categories</span>
+              <span class="pro-banner__line">+ sentence highlights</span>
+            </span>
+            <span class="pro-banner__cta">Go Pro</span>
+          </button>
+        </div>
+      </section>
+    </div>
+    </div>
+  </div>
+
+  <div id="primeModal" class="prime-modal" hidden>
+    <div class="prime-modal__backdrop" id="primeModalBackdrop"></div>
+    <div class="prime-modal__sheet upgrade-panel" role="dialog" aria-labelledby="primeTitle" aria-modal="true">
+      <header class="prime-modal__header">
+        <div class="prime-modal__header-main">
+          <span class="prime-modal__crown" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 10l4-6 4 3 4-3 4 6-2 10H6L4 10z"/>
+            </svg>
+          </span>
+          <div>
+            <h2 id="primeTitle" class="prime-modal__title">Upgrade to Prime</h2>
+            <p class="prime-modal__subtitle">Cancel anytime · unlimited daily scans</p>
+          </div>
+        </div>
+        <button type="button" id="primeCloseBtn" class="prime-modal__dismiss" aria-label="Close">×</button>
+      </header>
+
+      <div class="prime-modal__body">
+        <p class="upgrade-panel__pitch upgrade-panel__pitch--modal">Less than a coffee per month — stay protected from scams</p>
+        <div class="upgrade-plans" role="listbox" aria-label="Choose a plan">
+          <button type="button" class="upgrade-plan upgrade-plan--selected" data-plan="monthly" data-price="4.99" role="option" aria-selected="true">
+            <span class="upgrade-plan__popular">Popular</span>
+            <span class="upgrade-plan__name">Monthly</span>
+            <p class="upgrade-plan__price"><span class="upgrade-plan__amount">$4.99</span><span class="upgrade-plan__period">/mo</span></p>
+          </button>
+          <button type="button" class="upgrade-plan" data-plan="yearly" data-price="37" role="option" aria-selected="false">
+            <span class="upgrade-plan__name">Yearly</span>
+            <p class="upgrade-plan__price"><span class="upgrade-plan__amount">$37</span><span class="upgrade-plan__period">/yr</span></p>
+            <span class="upgrade-plan__save">Save 37%</span>
+          </button>
+        </div>
+        <ul class="upgrade-features-compact upgrade-features-compact--modal" aria-label="Prime benefits">
+          <li>Unlimited scans every day</li>
+          <li>All 8 manipulation signal categories</li>
+          <li>Sentence highlights on the page</li>
+          <li>Gmail, LinkedIn &amp; WhatsApp support</li>
+          <li>Full scan history on this device</li>
+        </ul>
+      </div>
+
+      <footer class="prime-modal__footer">
+        <button type="button" class="upgrade-pay-btn upgrade-pay-btn--modal" data-upgrade-pay>Pay $4.99 →</button>
+        <p class="upgrade-panel__payments">Secure checkout · Cards accepted</p>
+      </footer>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="lib/device.js"></script>
+  <script src="lib/chart.umd.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

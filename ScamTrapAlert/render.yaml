@@ -1,0 +1,22 @@
+  # Render Blueprint — deploy ScamTrapAlert backend
+# Dashboard: New → Blueprint → connect repo
+# Or: New Web Service, Root Directory = backend
+
+services:
+  - type: web
+    name: scamtrapalert-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GROQ_API_KEY
+        sync: false
+      - key: FREE_DAILY_SCAN_LIMIT
+        value: "10"
+      - key: PORT
+        value: "10000"
+    healthCheckPath: /health
