@@ -31,9 +31,6 @@ ScamTrapAlert is an AI-powered Chrome Extension that helps users identify phishi
 - LLM-based scam detection
 - Risk classification engine
 
-### Deployment
-- Render
-
 ## How It Works
 
 1. User opens WhatsApp Web, Gmail, or LinkedIn.
